@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet, Image, ScrollView } from 'react-native';
+import rupiahFormat from 'rupiah-format'
 import axios from 'axios'
 import {
     Container, Header, Text, View, Footer, FooterTab, Icon, Badge, Button, Content,
@@ -7,46 +8,31 @@ import {
 } from 'native-base';
 class cardList extends Component {
     constructor(props) {
-        super(props);
-        this.state = {
-            data: []
-        }
-    }
-    componentDidMount() {
-        this.getProducts()
-    }
-
-    getProducts = async () => {
-        await axios.get('http://3.94.205.19:4444/api/v.0.1/products')
-            .then(result => {
-                console.log(result)
-                this.setState({ data: result.data.data })
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        super(props)
+        this.state = {}
     }
     render() {
+        const ProductsList = this.props.handleCardList
         return (
             <>
-                {this.state.data.map(item => {
+                {ProductsList.map(item => {
                     return (
                         <Card style={{ elevation: 0, borderColor: '#fff', borderRadius: 15, overflow: 'hidden' }}>
                             <CardItem style={{ padding: 0 }}>
-                                <View style={{ flexDirection: "row", flex: 1 }}>
-                                    <View>
-                                        <Image source={require('../img/bakso.jpg')} style={{ width: 50, height: 50, resizeMode: 'cover', borderRadius: 15 }} />
-                                    </View>
-                                    <View>
+                                <Grid style={{ flexDirection: "row", flex: 1 }}>
+                                    <Col size={2}>
+                                        <Image source={{ uri: `http://192.168.1.5:5000/images/${item.image}` }} style={{ width: 50, height: 50, resizeMode: 'cover', borderRadius: 15 }} />
+                                    </Col>
+                                    <Col size={4}>
                                         <Text style={{ marginLeft: 20 }}>{item.name}</Text>
-                                        <Text style={{ marginLeft: 20 }}>{item.price}</Text>
-                                    </View>
-                                    <View>
-                                        <Button style={{ elevation: 0, marginLeft: 80, float: 'right', borderTopLeftRadius: 20, borderBottomLeftRadius: 20, marginTop: 2 }}>
+                                        <Text style={{ marginLeft: 20 }}>{rupiahFormat.convert(item.price)}</Text>
+                                    </Col>
+                                    <Col size={3}>
+                                        <Button style={{ elevation: 0, marginLeft: 30, float: 'right', borderTopLeftRadius: 20, borderBottomLeftRadius: 20, marginTop: 2 }} >
                                             <Icon name="cart" />
                                         </Button>
-                                    </View>
-                                </View>
+                                    </Col>
+                                </Grid>
                             </CardItem>
                         </Card>
                     )
@@ -55,6 +41,7 @@ class cardList extends Component {
 
         );
     }
+
 }
 
 

@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { StyleSheet, Image, ScrollView } from 'react-native';
-
+import rupiahFormat from 'rupiah-format'
 import {
     Container, Header, Text, View, Footer, FooterTab, Icon, Badge, Button, Content,
     Grid, Col, Input, Item, Card, CardItem, Left, Thumbnail, Body, Right, Root, ActionSheet,
-    SwipeRow
+    SwipeRow, Picker, Form
 } from 'native-base';
 // Component
 import MainCard from '../Component/mainCard'
 import CardList from '../Component/cardList'
 
-// import axios from 'axios'
+import axios from 'axios'
 
 // import { hidden } from 'colorette';
 var BUTTONS = [
@@ -31,41 +31,62 @@ var CANCEL_INDEX = 4;
 // } = React;
 
 class Home extends Component {
-
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [],
+        }
+    }
+    componentDidMount() {
+        this.getSearch()
+    }
+    getSearch = async (text = ' ') => {
+        await axios.get(`http://192.168.1.4:5000/api/products?search=${text}`)
+            .then(result => {
+                // console.log(result)
+                this.setState({
+                    data: result.data.data
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
     render() {
-
         return (
             <>
                 <Container style={{ backgroundColor: '#eaedff' }}>
                     <Content>
-                        <View style={{ flexDirection: "row", flex: 1, position: "absolute" }}>
+                        <View style={{backgroundColor:'#3f51b5',borderBottomRightRadius:30, borderBottomLeftRadius:30}}>
+                            <View style={{ flexDirection: "row", flex: 1, position: "absolute" }}>
+                                <Text style={style.judul}>Nusantara Food</Text>
+                                </View>
 
-                            <Text style={style.judul}>Nusantara Food</Text>
-                        </View>
-
-                        <Header searchBar rounded style={style.header}>
-                            <Item>
-                                <Icon name="ios-search" />
-                                <Input placeholder="Search" />
-                                <Icon name="pizza" />
-                            </Item>
-                            <Button transparent>
-                                <Text>Search</Text>
-                            </Button>
-                        </Header>
+                                <Header searchBar rounded style={style.header}>
+                                <Item>
+                                    <Icon name="ios-search" />
+                                    <Input placeholder="Search" onChangeText={(text) => this.getSearch(text)} />
+                                    <Icon name="pizza" />
+                                </Item>
+                                <Button transparent>
+                                    <Text>Search Food</Text>
+                                </Button>
+                                </Header>
+                         </View>
 
 
                         <ScrollView
                             scrollEventThrottle={16}>
                             <View>
-                                <Text style={{ fontSize: 25, margin: 20, fontWeight: '700' }}>Popular</Text>
+                                <Text style={{ fontSize: 25, margin: 20, fontWeight: '700' }}>Terbaru</Text>
                                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                                    <MainCard />
+                                    <MainCard handleMainCard={this.state.data} />
                                 </ScrollView>
                             </View>
                         </ScrollView>
 
                         <View style={{ margin: 20, }}>
+
                             <Grid>
                                 <Col>
                                     <Text style={{ fontSize: 25, marginLeft: 10, marginRight: 20, marginBottom: 10, fontWeight: '700' }}>Food</Text>
@@ -75,9 +96,29 @@ class Home extends Component {
                                 </Col>
                             </Grid>
 
-                            <CardList />
+                            <CardList handleCardList={this.state.data} />
+                        </View>
+                        <View>
+                            {/* <Grid>
+                                <Col size={5}>
+                                    <Button iconLeft light rounded style={{ elevation: 0 }}>
+                                        <Icon name='arrow-back' />
+                                    </Button>
+                                </Col>
+                                <Col size={5}>
+                                    <Button 
+                                    iconRight light rounded style={{ elevation: 0 }}
+                                    onPress={this.hanle}
+                                    >
+                                        <Icon name='arrow-forward' />
+                                    </Button>
+                                </Col>
+                            </Grid> */}
                         </View>
                     </Content>
+
+
+
 
                     <Footer>
                         <FooterTab style={{ backgroundColor: 'white' }}>
@@ -96,7 +137,7 @@ class Home extends Component {
                                 onPress={() => this.props.navigation.navigate('Home')}
                             >
                                 <Badge><Text>2</Text></Badge>
-                                <Icon name="apps" />
+                                <Icon name="apps" style={{ color: '#3f51b5' }}/>
                                 <Text>Home</Text>
                             </Button>
                             <Button vertical onPress={() => this.props.navigation.navigate('History')}>
@@ -154,7 +195,8 @@ const style = StyleSheet.create({
     judul: {
         margin: 20,
         fontSize: 30,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color:'#fff'
     },
     card: {
         margin: 10,
