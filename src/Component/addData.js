@@ -2,10 +2,11 @@ import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
 import {
     Text, View, Container, Content, Grid, Col, Left, Button, Icon, Body, Title,
-    Header, RightItem, Input, Item, Form, Textarea
+    Header, RightItem, Input, Item, Form, Textarea, Image
 } from 'native-base'
 import axios from 'axios'
 import ImagePicker from 'react-native-image-picker'
+const URL = 'http://192.168.1.14:5000/api'
 class AddData extends Component {
     constructor(props) {
         super(props)
@@ -14,16 +15,34 @@ class AddData extends Component {
             description: '',
             image: '',
             price: '',
-            quantity: ''
+            id_category:'',
+            quantity: '',
+            updated:'',
+            filePath:''
         }
     }
 
     addData = async () => {
-        console.log(this.state.name)
-        console.log(this.state.description)
-        console.log(this.state.image)
-        console.log(this.state.price)
-        console.log(this.state.quantity)
+        const data = {
+            name:this.state.name,
+            description:this.state.description,
+            image:this.state.filePath.uri,
+            price:this.state.price,
+            quantity:this.state.quantity,
+            updated:this.state.updated,
+            id_category:this.state.id_category
+        }
+        await axios.post(`${URL}/products`, data)
+        .then(result => {
+            // console.log(result)
+            this.setState({
+                data: result.data.data
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+
     }
 
 
@@ -41,14 +60,14 @@ class AddData extends Component {
       },
     };
     ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
+    //   console.log('Response = ', response);
  
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+        // console.log('ImagePicker Error: ', response.error);
       } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
+        // console.log('User tapped custom button: ', response.customButton);
         alert(response.customButton);
       } else {
         let source = response;
@@ -64,14 +83,27 @@ class AddData extends Component {
 
 
     render() {
-
+        // console.log(this.state.filePath.path)
         return (
             <>
                 <Container>
                     <Content>
                         <View style={{ margin: 20 }}>
-                            
-                        <Button primary title="Choose File" onPress={this.chooseFile.bind(this)}></Button>
+                        {/* <Image
+            source={{
+              uri: 'data:image/jpeg;base64,' + this.state.filePath.data,
+            }}
+            style={{ width: 100, height: 100 }}
+          />
+          <Image
+            source={{ uri: this.state.filePath.uri }}
+            style={{ width: 250, height: 250 }}
+          />
+          <Text style={{ alignItems: 'center' }}>
+            {this.state.filePath.uri}
+          </Text> */}
+          {/* {this.state.filePath !==''?(<Image source={{uri:this.state.filePath}} style={{width:40, height:50}}/>):<Text>jihjhb</Text>} */}
+                       
                             <Grid>
                                 <Col>
                                     <Header hasSegment style={{ backgroundColor: '#fff', marginBottom: 20 }}>
@@ -98,12 +130,17 @@ class AddData extends Component {
                                         <Item>
                                             <Textarea rowSpan={5} underline placeholder="Description" onChangeText={(text) => this.setState({ description: text })} />
                                         </Item>
-                                        <Item>
-                                            {/* <Input placeholder='Image' onChangeText={(text) => this.setState({ image: text })} /> */}
-                                           
-                                        </Item>
+                                        
+                                        <Button  primary onPress={this.chooseFile.bind(this)}  style={{elevation:0, width:130, marginTop:10, marginLeft:15}}><Text>Choose File</Text></Button>
+                                        
                                         <Item>
                                             <Input placeholder='Price' onChangeText={(text) => this.setState({ price: text })} />
+                                        </Item>
+                                        <Item>
+                                            <Input placeholder='idcategory' onChangeText={(text) => this.setState({ id_category: text })} />
+                                        </Item>
+                                        <Item>
+                                            <Input placeholder='Updated' onChangeText={(text) => this.setState({ updated: text })} />
                                         </Item>
                                         <Item>
                                             <Input placeholder='Quantity' onChangeText={(text) => this.setState({ quantity: text })} />

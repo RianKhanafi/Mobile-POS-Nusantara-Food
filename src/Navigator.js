@@ -4,11 +4,13 @@ import { createStackNavigator } from 'react-navigation-stack'
 // Screen
 import Signin from './Screens/Signin'
 import Signup from './Screens/Signup'
-import NavMenu from './Component/navMenu'
 
 import Home from './Screens/Home'
 import History from './Screens/History'
 
+// import DetailProduct from './Component/detailProduct'
+import Footer from './Component/footer'
+import Cart from './Component/cart'
 //Component
 import AddData from './Component/addData'
 
@@ -17,8 +19,10 @@ const MainNavigator = createStackNavigator({
     Signup,
     Home,
     History,
-    NavMenu,
+    Footer,
     AddData,
+    // DetailProduct,
+    Cart
 }, {
     headerMode: 'none',
     initialRouteName: 'Signin'
@@ -34,6 +38,9 @@ const MainNavigator = createStackNavigator({
 },{
     headerMode: 'none',
     initialRouteName: 'AddData'
+},{
+    headerMode: 'none',
+    initialRouteName: 'DetailProduct'
 })
 
 export default createAppContainer(MainNavigator)

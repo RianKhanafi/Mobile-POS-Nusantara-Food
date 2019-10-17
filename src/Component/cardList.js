@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Image, ScrollView } from 'react-native';
+import { StyleSheet, Image, ScrollView,AsyncStorage,TouchableOpacity } from 'react-native';
 import rupiahFormat from 'rupiah-format'
 import axios from 'axios'
 import {
@@ -7,10 +7,7 @@ import {
     Grid, Col, Input, Item, Card, CardItem, Left, Thumbnail, Body, Right, Root, ActionSheet
 } from 'native-base';
 class cardList extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {}
-    }
+
     render() {
         const ProductsList = this.props.handleCardList
         return (
@@ -21,14 +18,42 @@ class cardList extends Component {
                             <CardItem style={{ padding: 0 }}>
                                 <Grid style={{ flexDirection: "row", flex: 1 }}>
                                     <Col size={2}>
-                                        <Image source={{ uri: `http://192.168.1.5:5000/images/${item.image}` }} style={{ width: 50, height: 50, resizeMode: 'cover', borderRadius: 15 }} />
+                                        <Image source={{ uri: `http://192.168.1.14:5000/images/${item.image}` }} style={{ width: 50, height: 50, resizeMode: 'cover', borderRadius: 15 }} />
                                     </Col>
                                     <Col size={4}>
+                                    <TouchableOpacity   style={{backgroundColor:'transparant'}}  
+                                 onPress={()=>this.props.navigate('DetailProduct', {
+                                            product:{
+                                                    id:item.id,
+                                                    name:item.name,
+                                                    description:item.description,
+                                                    image:item.image,
+                                                    price:item.price,
+                                                    quantity:item.quantity
+                                                }
+                                             })
+                                      }>
                                         <Text style={{ marginLeft: 20 }}>{item.name}</Text>
                                         <Text style={{ marginLeft: 20 }}>{rupiahFormat.convert(item.price)}</Text>
+                                   </TouchableOpacity>
                                     </Col>
                                     <Col size={3}>
-                                        <Button style={{ elevation: 0, marginLeft: 30, float: 'right', borderTopLeftRadius: 20, borderBottomLeftRadius: 20, marginTop: 2 }} >
+                                        <Button 
+                                        style={{ elevation: 0, marginLeft: 30, float: 'right', borderTopLeftRadius: 20, borderBottomLeftRadius: 20, marginTop: 2 }} 
+                                        // onPress={()=>this.props.navigate('Cart',{
+                                        //     product:{
+                                        //             id:item.id,
+                                        //             name:item.name,
+                                        //             description:item.description,
+                                        //             image:item.image,
+                                        //             price:item.price,
+                                        //             quantity:item.quantity,
+                                        //             count:1
+                                        //         }
+                                        //      })
+                                        // }
+                                        onPress={()=>this.props.handleAddtoCart(item)}
+                                        >
                                             <Icon name="cart" />
                                         </Button>
                                     </Col>

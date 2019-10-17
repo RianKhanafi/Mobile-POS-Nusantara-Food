@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet,TouchableOpacity} from 'react-native'
 import {
     Container, Content, Grid, Col, Card, CardItem, Body, Text, View,
-    List, ListItem, Thumbnail, Left, Right, Button, Footer, FooterTab, Badge, Icon, Root
+    List, ListItem, Thumbnail, Left, Right, Button, Badge, Icon, Root
 } from 'native-base'
 import axios from 'axios'
+// import Footer from '../Component/navMenu'
 // Compinent
-import NavMenu from '../Component/navMenu'
+import Footer from '../Component/footer'
+const URL = 'http://192.168.1.14:5000/api'
 class History extends Component {
     constructor(props) {
         super()
@@ -19,7 +21,8 @@ class History extends Component {
             resYearIncome: 0,
             recentOrder: [],
             growthOrdeWeek: 0,
-            yearCount: 0
+            yearCount: 0,
+            detalProduct:[]
         }
         this.getRecentOrder = this.getRecentOrder.bind(this)
     }
@@ -31,7 +34,7 @@ class History extends Component {
 
     // Card
     getCountOrder = async () => {
-        await axios.get('http://192.168.1.5:5000/api/countorders')
+        await axios.get(`${URL}/countorders`)
             .then(result => {
                 let growthCount = ((result.data.data[0].daynow - result.data.data[0].yesterday) / result.data.data[0].yesterday) * 100
                 let gowCount = ((result.data.data[0].weeknow - result.data.data[0].lastweek) / result.data.data[0].lastweek) * 100
@@ -52,7 +55,7 @@ class History extends Component {
     // grafik
     getRecentOrder = async (event) => {
         let data = event.target.value
-        Http.get(`/recentorder?order=${data}`)
+        axios.get(`${URL}/recentorder?order=${data}`)
             .then(result => {
                 this.setState({
                     data: result.data.data,
@@ -66,7 +69,7 @@ class History extends Component {
 
     // show recent order
     recentOrder = async () => {
-        await axios.get('http://192.168.1.5:5000/api/grOrder?order=year')
+        await axios.get(`${URL}/grOrder?order=year`)
             .then(result => {
                 this.setState({
                     recentOrder: result.data.data
@@ -74,7 +77,22 @@ class History extends Component {
             })
     }
 
+    gotoDetail = async(id, image, name, description, price, quantity) =>{
+        const detalProduct = {
+            id: id,
+            name:name,
+            image:image,
+            description:description,
+            price:price,
+            quantity:quantity
+        }
+      this.setState({
+        detalProduct: detalProduct
+      })
+    }
+
     render() {
+        console.log(this.state.detalProduct)
         this.state.recentOrder.map(item => {
             console.log(item.amount)
         })
@@ -145,13 +163,25 @@ class History extends Component {
                                     <List style={{ marginBottom: 10 }}>
                                         {this.state.recentOrder.map(item => {
                                             return (
+                                               
                                                 <ListItem thumbnail>
                                                     <Body>
                                                         <Text>{item.amount}</Text>
                                                         <Text note numberOfLines={1}>{item.orders}</Text>
                                                     </Body>
                                                     <Right>
-                                                        <Button transparent>
+                                                        <Button transparent 
+                                                        onPress={()=>this.props.navigation.navigate('DetailProduct', {
+                                                            product:{
+                                                                id:item.idRecet,
+                                                                buyer:item.buyer,
+                                                                date:item.date,
+                                                                orders:item.orders,
+                                                                amount:item.amount
+                                                            }
+                                                        })
+                                                        }
+                                                        >
                                                             <Text style={{ color: '#3f51b5' }}>View</Text>
                                                         </Button>
                                                     </Right>
@@ -165,53 +195,7 @@ class History extends Component {
                     </Content>
 
 
-                    <Footer>
-                        <FooterTab style={{ backgroundColor: 'white' }}>
-                            <Button badge vertical
-                                onPress={() => this.props.navigation.navigate('Home')}
-                            >
-                                <Badge><Text>2</Text></Badge>
-                                <Icon name="cart" />
-                                <Text>Cart</Text>
-                            </Button>
-                            <Button vertical onPress={() => this.props.navigation.navigate('AddData')}>
-                                <Icon name="add" />
-                                <Text>Add</Text>
-                            </Button>
-                            <Button badge vertical
-                                onPress={() => this.props.navigation.navigate('Home')}
-                            >
-                                <Badge><Text>2</Text></Badge>
-                                <Icon name="apps" />
-                                <Text>Home</Text>
-                            </Button>
-                            <Button vertical onPress={() => this.props.navigation.navigate('History')}>
-                                <Icon
-                                    name="refresh"
-                                />
-                                <Text>Chart</Text>
-                            </Button>
-                            <Root>
-                                <Button badge vertical style={{ backgroundColor: '#fff', elevation: 0, borderRadius: 10 }}
-                                    onPress={() =>
-                                        ActionSheet.show(
-                                            {
-                                                options: BUTTONS,
-                                                cancelButtonIndex: CANCEL_INDEX,
-                                                destructiveButtonIndex: DESTRUCTIVE_INDEX,
-                                                title: "Setting"
-                                            },
-                                            buttonIndex => {
-                                                this.setState({ clicked: BUTTONS[buttonIndex] });
-                                            }
-                                        )}
-                                >
-                                    <Icon name="settings" style={{ color: '#3f51b5' }} />
-                                    <Text style={{ color: '#3f51b5' }}>Cart</Text>
-                                </Button>
-                            </Root>
-                        </FooterTab>
-                    </Footer>
+                   <Footer navigate={this.props.navigation.navigate}/>
                 </Container>
             </>
         )

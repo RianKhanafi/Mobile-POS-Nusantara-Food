@@ -1,47 +1,34 @@
 import React, { Component } from 'react'
-import { StyleSheet, Image, ScrollView } from 'react-native';
+import { StyleSheet, Image, ScrollView,AsyncStorage } from 'react-native';
 import rupiahFormat from 'rupiah-format'
 import {
-    Container, Header, Text, View, Footer, FooterTab, Icon, Badge, Button, Content,
-    Grid, Col, Input, Item, Card, CardItem, Left, Thumbnail, Body, Right, Root, ActionSheet,
-    SwipeRow, Picker, Form
+    Container, Header, Text, View,Icon, Badge, Button, Content,
+    Grid, Col, Input, Item, Card, CardItem, Left, Thumbnail, Body, Right, Root,
+    SwipeRow, Picker, Form, Drawer 
 } from 'native-base';
+
 // Component
 import MainCard from '../Component/mainCard'
 import CardList from '../Component/cardList'
-
+import Footer from '../Component/footer'
 import axios from 'axios'
 
-// import { hidden } from 'colorette';
-var BUTTONS = [
-    { text: "Signin", icon: "sign in", iconColor: "#3f51b5" },
-    { text: "Sign out", icon: "analytics", iconColor: "#3f51b5" },
-    { text: "Dashboard", icon: "aperture", iconColor: "#3f51b5" },
-    { text: "Delete", icon: "trash", iconColor: "#3f51b5" },
-    { text: "Cancel", icon: "close", iconColor: "#3f51b5" }
-];
-var DESTRUCTIVE_INDEX = 3;
-var CANCEL_INDEX = 4;
-// import Carousel from 'react-native-carousel'
-// var {
-//     AppRegistry,
-//     StyleSheet,
-//     Text,
-//     View,
-// } = React;
+const URL = 'http://192.168.1.14:5000/api'
 
 class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
             data: [],
+            cartItem:[]
         }
+        this.handleAddtoCart = this.handleAddtoCart.bind(this)
     }
     componentDidMount() {
         this.getSearch()
     }
     getSearch = async (text = ' ') => {
-        await axios.get(`http://192.168.1.4:5000/api/products?search=${text}`)
+        await axios.get(`${URL}/products?search=${text}`)
             .then(result => {
                 // console.log(result)
                 this.setState({
@@ -52,7 +39,37 @@ class Home extends Component {
                 console.log(err)
             })
     }
+
+
+
+    handleAddtoCart(item) {
+        // console.log(item)
+        this.setState(state=>{
+            const cartItem = state.cartItem
+            let productAlredyinChart = false
+            cartItem.forEach(data =>{
+                if(data.id === item.id){
+                    productAlredyinChart = true
+                    data.count += 1
+                }
+            })
+          
+            if (!productAlredyinChart) {
+                cartItem.push({ ...item, count: 1 })
+            }
+            AsyncStorage.setItem("cartItem", JSON.stringify(cartItem))
+            // console.log(cartItem)
+            return (cartItem)
+        })
+    }
+
+        
+
+ 
+
+
     render() {
+        // console.log(this.state.cartItem)
         return (
             <>
                 <Container style={{ backgroundColor: '#eaedff' }}>
@@ -69,7 +86,7 @@ class Home extends Component {
                                     <Icon name="pizza" />
                                 </Item>
                                 <Button transparent>
-                                    <Text>Search Food</Text>
+                                    <Text>Search Menu</Text>
                                 </Button>
                                 </Header>
                          </View>
@@ -80,7 +97,7 @@ class Home extends Component {
                             <View>
                                 <Text style={{ fontSize: 25, margin: 20, fontWeight: '700' }}>Terbaru</Text>
                                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                                    <MainCard handleMainCard={this.state.data} />
+                                    <MainCard handleMainCard={this.state.data} navigate={this.props.navigation.navigate} />
                                 </ScrollView>
                             </View>
                         </ScrollView>
@@ -96,77 +113,15 @@ class Home extends Component {
                                 </Col>
                             </Grid>
 
-                            <CardList handleCardList={this.state.data} />
+                            <CardList handleCardList={this.state.data} navigate={this.props.navigation.navigate} handleAddtoCart={this.handleAddtoCart}/>
                         </View>
-                        <View>
-                            {/* <Grid>
-                                <Col size={5}>
-                                    <Button iconLeft light rounded style={{ elevation: 0 }}>
-                                        <Icon name='arrow-back' />
-                                    </Button>
-                                </Col>
-                                <Col size={5}>
-                                    <Button 
-                                    iconRight light rounded style={{ elevation: 0 }}
-                                    onPress={this.hanle}
-                                    >
-                                        <Icon name='arrow-forward' />
-                                    </Button>
-                                </Col>
-                            </Grid> */}
-                        </View>
+                        <Button primary onPress={()=> this.props.navigation.navigate('Cart', {
+                            cart:{
+                                data:this.state.cartItem
+                            }
+                        })}><Text>Button</Text></Button>
                     </Content>
-
-
-
-
-                    <Footer>
-                        <FooterTab style={{ backgroundColor: 'white' }}>
-                            <Button badge vertical
-                                onPress={() => this.props.navigation.navigate('Home')}
-                            >
-                                <Badge><Text>2</Text></Badge>
-                                <Icon name="cart" />
-                                <Text>Cart</Text>
-                            </Button>
-                            <Button vertical onPress={() => this.props.navigation.navigate('AddData')}>
-                                <Icon name="add" />
-                                <Text>Add</Text>
-                            </Button>
-                            <Button badge vertical
-                                onPress={() => this.props.navigation.navigate('Home')}
-                            >
-                                <Badge><Text>2</Text></Badge>
-                                <Icon name="apps" style={{ color: '#3f51b5' }}/>
-                                <Text>Home</Text>
-                            </Button>
-                            <Button vertical onPress={() => this.props.navigation.navigate('History')}>
-                                <Icon
-                                    name="refresh"
-                                />
-                                <Text>Chart</Text>
-                            </Button>
-                            <Root>
-                                <Button badge vertical style={{ backgroundColor: '#fff', elevation: 0, borderRadius: 10 }}
-                                    onPress={() =>
-                                        ActionSheet.show(
-                                            {
-                                                options: BUTTONS,
-                                                cancelButtonIndex: CANCEL_INDEX,
-                                                destructiveButtonIndex: DESTRUCTIVE_INDEX,
-                                                title: "Setting"
-                                            },
-                                            buttonIndex => {
-                                                this.setState({ clicked: BUTTONS[buttonIndex] });
-                                            }
-                                        )}
-                                >
-                                    <Icon name="settings" style={{ color: '#3f51b5' }} />
-                                    <Text style={{ color: '#3f51b5' }}>Cart</Text>
-                                </Button>
-                            </Root>
-                        </FooterTab>
-                    </Footer>
+                        <Footer navigate={this.props.navigation.navigate} />
                 </Container>
             </>
         )
@@ -180,9 +135,6 @@ const style = StyleSheet.create({
     order: {
         fontSize: 35,
         color: '#aaa'
-        // borderTopLeftRadius: 30,
-        // borderTopRightRadius: 30,
-        // borderBottomRightRadius: 30,
     },
     header: {
         backgroundColor: '#fff',
