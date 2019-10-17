@@ -20,6 +20,7 @@ class mainCard extends Component {
         const handleMainCard = this.props.handleMainCard
         return (
             <>
+            
                 {handleMainCard.map(item => {
                     return (
                         <View style={style.viewCardScroll}>
