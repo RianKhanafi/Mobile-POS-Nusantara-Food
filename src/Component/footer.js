@@ -27,7 +27,7 @@ class navMenun extends Component {
                <Footer>
                         <FooterTab style={{ backgroundColor: 'white' }}>
                             <Button badge vertical
-                                onPress={() => this.props.navigate('Cart')}
+                                onPress={() => this.props.navigate('Manage')}
                             >
                                 <Badge><Text>2</Text></Badge>
                                 <Icon name="cart" />

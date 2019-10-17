@@ -7,10 +7,11 @@ import Signup from './Screens/Signup'
 
 import Home from './Screens/Home'
 import History from './Screens/History'
-
+import Manage from './Screens/manage'
 // import DetailProduct from './Component/detailProduct'
 import Footer from './Component/footer'
 import Cart from './Component/cart'
+// import Cart from './Component/cart'
 //Component
 import AddData from './Component/addData'
 
@@ -22,7 +23,8 @@ const MainNavigator = createStackNavigator({
     Footer,
     AddData,
     // DetailProduct,
-    Cart
+    Cart,
+    Manage
 }, {
     headerMode: 'none',
     initialRouteName: 'Signin'

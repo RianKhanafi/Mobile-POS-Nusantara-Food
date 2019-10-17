@@ -5,6 +5,7 @@ import { View, Button,Text, Container, Content, Grid, Col, Row,
     List, ListItem, Thumbnail,Left, Right, Body, Header, Icon, Title, cartItem,
     Form, Item, Input } from 'native-base';
     const URL = 'http://192.168.1.14:5000'
+    import axios from 'axios'
 class detailProduct extends Component {
     constructor(props){
         super(props)
@@ -12,7 +13,23 @@ class detailProduct extends Component {
           cartItem: this.props.navigation.getParam('cart')
         }
       }
-    
+      checkout = async () =>{
+          let data = []
+          let jumlah=this.state.cartItem.data[0].price * this.state.cartItem.data[0].count
+          this.state.cartItem.data.map(item=>{
+            data.push({ buyer:'example',amount:jumlah,id:item.id,ordername:item.name, quantity:item.quantity})
+          })
+                // await axios.post(`${URL}/api/products/reduce`, data)
+                // .then(result => {
+                //     console.log(result)
+                //     // this.setState(res{
+                //     //     data: result.data.data
+                //     // })
+                // })
+                // .catch(err => {
+                //     console.log(err)
+                // })
+      }
     render() {
        const cart = this.state.cartItem.data
         return (
@@ -58,17 +75,12 @@ class detailProduct extends Component {
                                     </ListItem>
                                    )
                                })}
+                            </List>
                                <Form>
-                                        {/* success */}
-                                        <Item>
-                                            <Input placeholder='Menu name' onChangeText={(text) => this.setState({ name: text })} />
-                                        </Item>
-                                    
-                                        <Button full primary style={style.button} onPress={this.addData}>
+                                    <Button full primary style={style.button} onPress={this.checkout}>
                                             <Text>Save Menu</Text>
                                         </Button>
                                     </Form>
-                            </List>
                             </View>
                             </View>
                     </Content>
