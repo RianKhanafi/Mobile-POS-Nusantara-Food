@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { StyleSheet, Image, ScrollView,AsyncStorage } from 'react-native';
+import { StyleSheet, Image, ScrollView, AsyncStorage } from 'react-native';
 import rupiahFormat from 'rupiah-format'
 import {
-    Container, Header, Text, View,Icon, Badge, Button, Content,
+    Container, Header, Text, View, Icon, Badge, Button, Content,
     Grid, Col, Input, Item, Card, CardItem, Left, Thumbnail, Body, Right, Root,
-    SwipeRow, Picker, Form, Drawer 
+    SwipeRow, Picker, Form, Drawer
 } from 'native-base';
 
 // Component
@@ -20,7 +20,7 @@ class Home extends Component {
         super(props);
         this.state = {
             data: [],
-            cartItem:[]
+            cartItem: []
         }
         this.handleAddtoCart = this.handleAddtoCart.bind(this)
     }
@@ -44,16 +44,16 @@ class Home extends Component {
 
     handleAddtoCart(item) {
         // console.log(item)
-        this.setState(state=>{
+        this.setState(state => {
             const cartItem = state.cartItem
             let productAlredyinChart = false
-            cartItem.forEach(data =>{
-                if(data.id === item.id){
+            cartItem.forEach(data => {
+                if (data.id === item.id) {
                     productAlredyinChart = true
                     data.count += 1
                 }
             })
-          
+
             if (!productAlredyinChart) {
                 cartItem.push({ ...item, count: 1 })
             }
@@ -63,9 +63,9 @@ class Home extends Component {
         })
     }
 
-        
 
- 
+
+
 
 
     render() {
@@ -74,12 +74,12 @@ class Home extends Component {
             <>
                 <Container style={{ backgroundColor: '#eaedff' }}>
                     <Content>
-                        <View style={{backgroundColor:'#3f51b5',borderBottomRightRadius:30, borderBottomLeftRadius:30}}>
+                        <View style={{ backgroundColor: '#3f51b5', borderBottomRightRadius: 30, borderBottomLeftRadius: 30 }}>
                             <View style={{ flexDirection: "row", flex: 1, position: "absolute" }}>
                                 <Text style={style.judul}>Nusantara Food</Text>
-                                </View>
+                            </View>
 
-                                <Header searchBar rounded style={style.header}>
+                            <Header searchBar rounded style={style.header}>
                                 <Item>
                                     <Icon name="ios-search" />
                                     <Input placeholder="Search" onChangeText={(text) => this.getSearch(text)} />
@@ -88,8 +88,8 @@ class Home extends Component {
                                 <Button transparent>
                                     <Text>Search Menu</Text>
                                 </Button>
-                                </Header>
-                         </View>
+                            </Header>
+                        </View>
 
 
                         <ScrollView
@@ -113,15 +113,15 @@ class Home extends Component {
                                 </Col>
                             </Grid>
 
-                            <CardList handleCardList={this.state.data} navigate={this.props.navigation.navigate} handleAddtoCart={this.handleAddtoCart}/>
+                            <CardList handleCardList={this.state.data} navigate={this.props.navigation.navigate} handleAddtoCart={this.handleAddtoCart} />
                         </View>
-                        <Button primary onPress={()=> this.props.navigation.navigate('Cart', {
-                            cart:{
-                                data:this.state.cartItem
+                        <Button primary onPress={() => this.props.navigation.navigate('Cart', {
+                            cart: {
+                                data: this.state.cartItem
                             }
                         })}><Text>Button</Text></Button>
                     </Content>
-                        <Footer navigate={this.props.navigation.navigate} />
+                    <Footer navigate={this.props.navigation.navigate} />
                 </Container>
             </>
         )
@@ -148,7 +148,7 @@ const style = StyleSheet.create({
         margin: 20,
         fontSize: 30,
         fontWeight: 'bold',
-        color:'#fff'
+        color: '#fff'
     },
     card: {
         margin: 10,
