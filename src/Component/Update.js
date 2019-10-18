@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TextInput } from 'react-native'
 import {
     Text, View, Container, Content, Grid, Col, Left, Button, Icon, Body, Title,
     Header, RightItem, Input, Item, Form, Textarea, Image
@@ -11,15 +11,34 @@ class AddData extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            product: this.props.navigation.getParam('updtData'),
             name: '',
             description: '',
-            image: '',
-            price: '',
-            id_category: '',
-            quantity: '',
-            updated: '',
-            filePath: ''
+            price: 0,
+            category: '',
+            quantity: 0,
         }
+    }
+    componentDidMount() {
+        this.getDataById()
+    }
+    getDataById = async () => {
+        // this.setState({ modalVisible: visible });
+        await axios.get(`${API_BASE_URL}/api/products/${this.state.product}`)
+            .then(result => {
+                console.log(result.data.data[0].price)
+                this.setState({
+                    name: result.data.data[0].name,
+                    description: result.data.data[0].description,
+                    price: result.data.data[0].price,
+                    category: result.data.data[0].id_category,
+                    quantity: result.data.data[0].quantity
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        // console.log(this.state.setEdit[0].name)
     }
 
     addData = async () => {
@@ -80,27 +99,12 @@ class AddData extends Component {
 
 
     render() {
-        // console.log(this.state.filePath.path)
+        // console.log(this.state.product)
         return (
             <>
                 <Container>
                     <Content>
                         <View style={{ margin: 20 }}>
-                            {/* <Image
-            source={{
-              uri: 'data:image/jpeg;base64,' + this.state.filePath.data,
-            }}
-            style={{ width: 100, height: 100 }}
-          />
-          <Image
-            source={{ uri: this.state.filePath.uri }}
-            style={{ width: 250, height: 250 }}
-          />
-          <Text style={{ alignItems: 'center' }}>
-            {this.state.filePath.uri}
-          </Text> */}
-                            {/* {this.state.filePath !==''?(<Image source={{uri:this.state.filePath}} style={{width:40, height:50}}/>):<Text>jihjhb</Text>} */}
-
                             <Grid>
                                 <Col>
                                     <Header hasSegment style={{ backgroundColor: '#fff', marginBottom: 20 }}>
@@ -112,7 +116,7 @@ class AddData extends Component {
                                             </Button>
                                         </Left>
                                         <Body>
-                                            <Title style={{ color: 'black' }}>Add Menu</Title>
+                                            <Title style={{ color: 'black' }}>Update Menu</Title>
                                         </Body>
                                     </Header>
                                 </Col>
@@ -121,9 +125,9 @@ class AddData extends Component {
                                 <Col>
                                     <Form>
                                         {/* success */}
-                                        <Item>
-                                            <Input placeholder='Menu name' onChangeText={(text) => this.setState({ name: text })} />
-                                        </Item>
+                                        {/* <Item> */}
+                                        <TextInput value={this.state.price} />
+                                        {/* </Item> */}
                                         <Item>
                                             <Textarea rowSpan={5} underline placeholder="Description" onChangeText={(text) => this.setState({ description: text })} />
                                         </Item>
@@ -143,7 +147,7 @@ class AddData extends Component {
                                             <Input placeholder='Quantity' onChangeText={(text) => this.setState({ quantity: text })} />
                                         </Item>
                                         <Button full primary style={style.button} onPress={this.addData}>
-                                            <Text>Save Menu</Text>
+                                            <Text>Update Menu</Text>
                                         </Button>
                                     </Form>
                                 </Col>

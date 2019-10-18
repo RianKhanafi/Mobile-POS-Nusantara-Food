@@ -4,8 +4,8 @@ import {
     Item, Input, Label, Button, Text, View, TextInput
 } from 'native-base';
 import axios from 'axios'
-import { StyleSheet,AsyncStorage } from 'react-native';
-const URL = 'http://192.168.1.5:5000'
+import { StyleSheet, AsyncStorage } from 'react-native';
+import { API_BASE_URL } from 'react-native-dotenv'
 class Login extends Component {
     constructor(props) {
         super(props)
@@ -16,12 +16,12 @@ class Login extends Component {
     }
     handleLogin = async () => {
 
-    const data = {
-        email: this.state.username,
-        password:this.state.password
-    }
-    
-        await axios.post(`${URL}/api/registration/login`, data)
+        const data = {
+            email: this.state.username,
+            password: this.state.password
+        }
+
+        await axios.post(`${API_BASE_URL}/api/registration/login`, data)
             .then(res => {
                 AsyncStorage.setItem('token', res.data.token);
                 AsyncStorage.setItem('username', res.data.name)

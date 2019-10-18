@@ -11,6 +11,7 @@ import Manage from './Screens/manage'
 import DetailProduct from './Component/detailProduct'
 import Footer from './Component/footer'
 import Cart from './Component/cart'
+import Update from './Component/Update'
 // import Cart from './Component/cart'
 //Component
 import AddData from './Component/addData'
@@ -24,7 +25,8 @@ const MainNavigator = createStackNavigator({
     AddData,
     DetailProduct,
     Cart,
-    Manage
+    Manage,
+    Update
 }, {
     headerMode: 'none',
     initialRouteName: 'Signin'

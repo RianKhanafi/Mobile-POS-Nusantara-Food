@@ -2,14 +2,16 @@ import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import {
     Container, Content, Grid, Col, Card, CardItem, Body, Text, View,
-    List, ListItem, Thumbnail, Left, Right, Button, Badge, Icon, Root
+    List, ListItem, Thumbnail, Left, Right, Button, Badge, Icon, Root, Picker, Form
 } from 'native-base'
 import rupiahFormat from 'rupiah-format'
 import axios from 'axios'
+import { API_BASE_URL } from 'react-native-dotenv'
+import PureChart from 'react-native-pure-chart';
 // import Footer from '../Component/navMenu'
 // Compinent
 import Footer from '../Component/footer'
-const URL = 'http://192.168.1.5:5000'
+
 class History extends Component {
     constructor(props) {
         super()
@@ -23,19 +25,33 @@ class History extends Component {
             recentOrder: [],
             growthOrdeWeek: 0,
             yearCount: 0,
-            detalProduct: []
+            detalProduct: [],
+            selected: "key1",
+            dataGrafik:[]
         }
         this.getRecentOrder = this.getRecentOrder.bind(this)
     }
     async componentDidMount() {
         await this.getCountOrder()
-        // await this.getValue()
-        await this.recentOrder()
+        this.getRecentOrder()
+    }
+    onValueChange = async (value) => {
+        // console.log(value)
+        this.setState({
+            selected: value
+        })
+        console.log(`${API_BASE_URL}/api/grOrder?order=${value}`)
+        await axios.get(`${API_BASE_URL}/api/grOrder?order=${value}`)
+            .then(result => {
+                this.setState({
+                    recentOrder: result.data.data
+                })
+            })
     }
 
     // Card
     getCountOrder = async () => {
-        await axios.get(`${URL}/api/countorders`)
+        await axios.get(`${API_BASE_URL}/api/countorders`)
             .then(result => {
                 let growthCount = ((result.data.data[0].daynow - result.data.data[0].yesterday) / result.data.data[0].yesterday) * 100
                 let gowCount = ((result.data.data[0].weeknow - result.data.data[0].lastweek) / result.data.data[0].lastweek) * 100
@@ -54,27 +70,17 @@ class History extends Component {
     }
 
     // grafik
-    getRecentOrder = async (event) => {
-        let data = event.target.value
-        axios.get(`${URL}/api/recentorder?order=${data}`)
+    getRecentOrder = async (event='day') => {
+        // let data = event.target.value
+        axios.get(`${API_BASE_URL}/api/recentorder?order=year`)
             .then(result => {
                 this.setState({
-                    data: result.data.data,
-                    order: data
+                    dataGrafik: result.data.data
+                    // order: data
                 })
             })
             .catch(err => {
                 console.log(err)
-            })
-    }
-
-    // show recent order
-    recentOrder = async () => {
-        await axios.get(`${URL}/api/grOrder?order=year`)
-            .then(result => {
-                this.setState({
-                    recentOrder: result.data.data
-                })
             })
     }
 
@@ -93,11 +99,46 @@ class History extends Component {
     }
 
     render() {
-        console.log(this.state.detalProduct)
-        this.state.recentOrder.map(item => {
-            console.log(item.amount)
-        })
-        // card if null
+        // let date = []
+        // let amount = []
+        // this.state.dataGrafik.map(item=>{
+        // })
+        // date.push({ 'x': item.date.substr(0,10), 'y': item.amount })
+        // console.log(date)
+        let sampleData = [
+            {
+                seriesName: 'series1',
+                data: [
+                    { x: '2018-02-01', y: 30 },
+                    { x: '2018-02-02', y: 200 },
+                    { x: '2018-02-03', y: 170 },
+                    { x: '2018-02-04', y: 250 },
+                    { x: '2018-02-05', y: 10 },
+                    { x: '2018-02-03', y: 170 },
+                    { x: '2018-02-04', y: 250 },
+                    { x: '2018-02-05', y: 10 }
+                ],
+                color: '#297AB1'
+            },
+            {
+                seriesName: 'series2',
+                data: [
+                    { x: '2018-02-01', y: 20 },
+                    { x: '2018-02-02', y: 100 },
+                    { x: '2018-02-03', y: 140 },
+                    { x: '2018-02-04', y: 550 },
+                    { x: '2018-02-05', y: 40 },
+                    { x: '2018-02-04', y: 550 },
+                    { x: '2018-02-05', y: 40 },
+                    { x: '2018-02-04', y: 550 },
+                    { x: '2018-02-05', y: 40 }
+                ],
+                color: 'yellow'
+            }
+        ]
+
+       
+        console.log(API_BASE_URL)
         if (this.state.count === null) {
             this.state.count = 0;
         }
@@ -114,6 +155,9 @@ class History extends Component {
                                     <CardItem>
                                         <Body>
                                             <Text style={{ fontSize: 20, color: '#3f51b5' }}>Revenue</Text>
+                                            <PureChart data={sampleData} type='line' height={150} width={'100%'} />
+
+
                                         </Body>
                                     </CardItem>
                                 </Card>
@@ -160,7 +204,29 @@ class History extends Component {
                         <View>
                             <Grid>
                                 <Col>
-                                    <Text style={{ fontSize: 30, fontWeight: '700', margin: 20 }}>Recent Order</Text>
+                                    <Grid>
+                                        <Col size={2}><Text style={{ fontSize: 30, fontWeight: '700', margin: 20 }}>Recent Order</Text></Col>
+                                        <Col>
+                                            <Form>
+                                                <Picker
+                                                    note
+                                                    mode="dropdown"
+                                                    style={{ width: 120 }}
+                                                    selectedValue={this.state.selected}
+                                                    onValueChange={this.onValueChange.bind(this)}
+                                                >
+                                                    <Picker.Item label="Daily" value="day"
+                                                        onChangeText={(text) => this.onValueChange(text)} />
+                                                    <Picker.Item label="Daily" value="day"
+                                                        onChangeText={(text) => this.onValueChange(text)} />
+                                                    <Picker.Item label="Monthly" value="month"
+                                                        onChangeText={(text) => this.onValueChange(text)} />
+                                                    <Picker.Item label="Year" value="year"
+                                                        onChangeText={(text) => this.onValueChange(text)} />
+                                                </Picker>
+                                            </Form>
+                                        </Col>
+                                    </Grid>
                                     <List style={{ marginBottom: 10 }}>
                                         {this.state.recentOrder.map(item => {
                                             return (

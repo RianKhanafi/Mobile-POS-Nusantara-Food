@@ -7,6 +7,7 @@ import {
     SwipeRow, Picker, Form, Drawer
 } from 'native-base';
 import 'react-native-dotenv'
+import { API_BASE_URL } from 'react-native-dotenv'
 
 
 
@@ -16,24 +17,36 @@ import CardList from '../Component/cardList'
 import Footer from '../Component/footer'
 import axios from 'axios'
 
-const URL = 'http://192.168.1.5:5000'
-
 class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
             data: [],
-            cartItem: []
+            cartItem: [],
+            selected: "key1"
         }
         this.handleAddtoCart = this.handleAddtoCart.bind(this)
     }
     componentDidMount() {
         this.getSearch()
     }
+    sort(value) {
+        let val = value
+        if (val === 'az') {
+            val = 'asc'
+        } else val = "desc"
+        this.getSearch(val)
+    }
     getSearch = async (text = ' ') => {
-        await axios.get(`${URL}/api/products?search=${text}`)
+        let url
+        url = 'products?search'
+        if (text === 'desc' || text === 'asc') {
+            url = 'products?sortBy=name&orderBy'
+        }
+        console.log(`${API_BASE_URL}/api/${url}=${text}`)
+        await axios.get(`${API_BASE_URL}/api/${url}=${text}`)
             .then(result => {
-                // console.log(result)
+                console.log(result)
                 this.setState({
                     data: result.data.data
                 })
@@ -72,7 +85,7 @@ class Home extends Component {
 
 
     render() {
-
+        console.log(this.state.selected)
         return (
             <>
                 <Container style={{ backgroundColor: '#eaedff' }}>
@@ -112,7 +125,23 @@ class Home extends Component {
                                     <Text style={{ fontSize: 25, marginLeft: 10, marginRight: 20, marginBottom: 10, fontWeight: '700' }}>Food</Text>
                                 </Col>
                                 <Col style={{ alignItems: 'flex-end' }}>
-                                    <Text style={{ fontSize: 15, marginLeft: 10, marginRight: 20, fontWeight: '700', color: '#3f51b5' }}>View All</Text>
+                                    {/* <Text style={{ fontSize: 15, marginLeft: 10, marginRight: 20, fontWeight: '700', color: '#3f51b5' }}> */}
+                                    <Form>
+                                        <Picker
+                                            note
+                                            mode="dropdown"
+                                            style={{ width: 120 }}
+                                            selectedValue={this.state.selected}
+                                            onValueChange={this.sort.bind(this)}
+                                        >
+                                            <Picker.Item label="Daily" value="Sort" />
+                                            <Picker.Item label="A-Z" value="az"
+                                                onChangeText={(text) => this.sort(text)} />
+                                            <Picker.Item label="Z-A" value="za"
+                                                onChangeText={(text) => this.sort(text)} />
+                                        </Picker>
+                                    </Form>
+                                    {/* </Text> */}
                                 </Col>
                             </Grid>
 
@@ -122,7 +151,7 @@ class Home extends Component {
                             cart: {
                                 data: this.state.cartItem
                             }
-                        })}><Text>Button</Text></Button>
+                        })} style={{ borderRadius: 20, margin:20 }}><Text>Button</Text></Button>
                     </Content>
                     <Footer navigate={this.props.navigation.navigate} />
                 </Container>

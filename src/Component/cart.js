@@ -6,7 +6,7 @@ import {
     List, ListItem, Thumbnail, Left, Right, Body, Header, Icon, Title, cartItem,
     Form, Item, Input
 } from 'native-base';
-const URL = 'http://192.168.1.5:5000'
+import { API_BASE_URL } from 'react-native-dotenv'
 import axios from 'axios'
 class detailProduct extends Component {
     constructor(props) {
@@ -43,12 +43,10 @@ class detailProduct extends Component {
         }
         // console.log(amount)
         // console.log(total)
-        await axios.post(`${URL}/api/products/reduce`, allData)
+        await axios.post(`${API_BASE_URL}/api/products/reduce`, allData)
             .then(result => {
                 console.log(result)
-                // this.setState(res{
-                //     data: result.data.data
-                // })
+
             })
             .catch(err => {
                 console.log(err)
@@ -85,7 +83,7 @@ class detailProduct extends Component {
                                         return (
                                             <ListItem thumbnail>
                                                 <Left>
-                                                    <Thumbnail square source={{ uri: `${URL}/images/${item.image}` }} />
+                                                    <Thumbnail square source={{ uri: `${API_BASE_URL}/images/${item.image}` }} />
                                                 </Left>
                                                 <Body>
                                                     <Text>{item.name}</Text>
