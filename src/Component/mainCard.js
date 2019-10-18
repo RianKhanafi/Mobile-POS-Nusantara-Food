@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, Image, ScrollView, TouchableOpacity  } from 'react-native';
 
 import { View, Button } from 'native-base';
+const URL = 'http://192.168.1.5:5000'
 class mainCard extends Component {
 
     render() {
@@ -25,7 +26,7 @@ class mainCard extends Component {
                                                 }
                                              })
                                       }>
-                                    <Image source={{uri:'http://192.168.1.14:5000/images/' + item.image}}  style={{ flex: 1, width: null, height: null, resizeMode: 'cover' }}/>
+                                    <Image source={{uri:URL+'/images/' + item.image}}  style={{ flex: 1, width: null, height: null, resizeMode: 'cover' }}/>
                                 </TouchableOpacity >
                             </View>
                         </View>

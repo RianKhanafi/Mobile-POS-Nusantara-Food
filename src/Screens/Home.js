@@ -6,6 +6,9 @@ import {
     Grid, Col, Input, Item, Card, CardItem, Left, Thumbnail, Body, Right, Root,
     SwipeRow, Picker, Form, Drawer
 } from 'native-base';
+import 'react-native-dotenv'
+
+
 
 // Component
 import MainCard from '../Component/mainCard'
@@ -13,7 +16,7 @@ import CardList from '../Component/cardList'
 import Footer from '../Component/footer'
 import axios from 'axios'
 
-const URL = 'http://192.168.1.14:5000/api'
+const URL = 'http://192.168.1.5:5000'
 
 class Home extends Component {
     constructor(props) {
@@ -28,7 +31,7 @@ class Home extends Component {
         this.getSearch()
     }
     getSearch = async (text = ' ') => {
-        await axios.get(`${URL}/products?search=${text}`)
+        await axios.get(`${URL}/api/products?search=${text}`)
             .then(result => {
                 // console.log(result)
                 this.setState({
@@ -69,7 +72,7 @@ class Home extends Component {
 
 
     render() {
-        // console.log(this.state.cartItem)
+
         return (
             <>
                 <Container style={{ backgroundColor: '#eaedff' }}>

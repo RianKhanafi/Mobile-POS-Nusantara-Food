@@ -8,7 +8,7 @@ import axios from 'axios'
 // import Footer from '../Component/navMenu'
 // Compinent
 import Footer from '../Component/footer'
-const URL = 'http://192.168.1.14:5000/api'
+const URL = 'http://192.168.1.5:5000'
 class History extends Component {
 
     constructor(props) {
@@ -26,7 +26,7 @@ class History extends Component {
 
     setModalVisible = async (visible, id) => {
         this.setState({ modalVisible: visible });
-        await axios.get(`${URL}/products/${id}`)
+        await axios.get(`${URL}/api/products/${id}`)
             .then(result => {
 
                 this.setState({
@@ -47,7 +47,7 @@ class History extends Component {
         this.getSearch()
     }
     getSearch = async () => {
-        await axios.get(`${URL}/products`)
+        await axios.get(`${URL}/api/products`)
             .then(result => {
 
                 this.setState({
@@ -60,7 +60,7 @@ class History extends Component {
     }
 
     delete = async (id) => {
-        await axios.delete(`${URL}/products?id=${id}`)
+        await axios.delete(`${URL}/api/products?id=${id}`)
             .then(result => {
                 console.log(result)
             })

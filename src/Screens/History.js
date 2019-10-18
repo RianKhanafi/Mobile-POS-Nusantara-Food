@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
-import { StyleSheet,TouchableOpacity} from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import {
     Container, Content, Grid, Col, Card, CardItem, Body, Text, View,
     List, ListItem, Thumbnail, Left, Right, Button, Badge, Icon, Root
 } from 'native-base'
+import rupiahFormat from 'rupiah-format'
 import axios from 'axios'
 // import Footer from '../Component/navMenu'
 // Compinent
 import Footer from '../Component/footer'
-const URL = 'http://192.168.1.14:5000/api'
+const URL = 'http://192.168.1.5:5000'
 class History extends Component {
     constructor(props) {
         super()
@@ -22,7 +23,7 @@ class History extends Component {
             recentOrder: [],
             growthOrdeWeek: 0,
             yearCount: 0,
-            detalProduct:[]
+            detalProduct: []
         }
         this.getRecentOrder = this.getRecentOrder.bind(this)
     }
@@ -34,7 +35,7 @@ class History extends Component {
 
     // Card
     getCountOrder = async () => {
-        await axios.get(`${URL}/countorders`)
+        await axios.get(`${URL}/api/countorders`)
             .then(result => {
                 let growthCount = ((result.data.data[0].daynow - result.data.data[0].yesterday) / result.data.data[0].yesterday) * 100
                 let gowCount = ((result.data.data[0].weeknow - result.data.data[0].lastweek) / result.data.data[0].lastweek) * 100
@@ -55,7 +56,7 @@ class History extends Component {
     // grafik
     getRecentOrder = async (event) => {
         let data = event.target.value
-        axios.get(`${URL}/recentorder?order=${data}`)
+        axios.get(`${URL}/api/recentorder?order=${data}`)
             .then(result => {
                 this.setState({
                     data: result.data.data,
@@ -69,7 +70,7 @@ class History extends Component {
 
     // show recent order
     recentOrder = async () => {
-        await axios.get(`${URL}/grOrder?order=year`)
+        await axios.get(`${URL}/api/grOrder?order=year`)
             .then(result => {
                 this.setState({
                     recentOrder: result.data.data
@@ -77,18 +78,18 @@ class History extends Component {
             })
     }
 
-    gotoDetail = async(id, image, name, description, price, quantity) =>{
+    gotoDetail = async (id, image, name, description, price, quantity) => {
         const detalProduct = {
             id: id,
-            name:name,
-            image:image,
-            description:description,
-            price:price,
-            quantity:quantity
+            name: name,
+            image: image,
+            description: description,
+            price: price,
+            quantity: quantity
         }
-      this.setState({
-        detalProduct: detalProduct
-      })
+        this.setState({
+            detalProduct: detalProduct
+        })
     }
 
     render() {
@@ -124,7 +125,7 @@ class History extends Component {
                                     <CardItem style={style.chartIncomeBlue}>
                                         <Body style={{ paddingTop: 20 }}>
                                             <Text style={{ color: '#fff' }}>This Year's Income</Text>
-                                            <Text style={{ color: '#fff', fontSize: 40 }}>{this.state.resYearIncome}</Text>
+                                            <Text style={{ color: '#fff', fontSize: 40 }}>{rupiahFormat.convert(this.state.resYearIncome)}</Text>
                                             <Text style={{ color: '#fff' }}>+{this.state.yearCount}%</Text>
                                         </Body>
                                     </CardItem>
@@ -148,7 +149,7 @@ class History extends Component {
                                     <CardItem>
                                         <Body style={{ paddingTop: 30 }}>
                                             <Text style={{ color: '#3f51b5' }}>Today's Income</Text>
-                                            <Text style={{ color: '#3f51b5', fontSize: 20 }}>{this.state.count}</Text>
+                                            <Text style={{ color: '#3f51b5', fontSize: 20 }}>{rupiahFormat.convert(this.state.count)}</Text>
                                             <Text style={{ color: '#3f51b5' }}>+90%</Text>
                                         </Body>
                                     </CardItem>
@@ -163,24 +164,24 @@ class History extends Component {
                                     <List style={{ marginBottom: 10 }}>
                                         {this.state.recentOrder.map(item => {
                                             return (
-                                               
+
                                                 <ListItem thumbnail>
                                                     <Body>
-                                                        <Text>{item.amount}</Text>
+                                                        <Text>{rupiahFormat.convert(item.amount)}</Text>
                                                         <Text note numberOfLines={1}>{item.orders}</Text>
                                                     </Body>
                                                     <Right>
-                                                        <Button transparent 
-                                                        onPress={()=>this.props.navigation.navigate('DetailProduct', {
-                                                            product:{
-                                                                id:item.idRecet,
-                                                                buyer:item.buyer,
-                                                                date:item.date,
-                                                                orders:item.orders,
-                                                                amount:item.amount
+                                                        <Button transparent
+                                                            onPress={() => this.props.navigation.navigate('DetailProduct', {
+                                                                product: {
+                                                                    id: item.idRecet,
+                                                                    buyer: item.buyer,
+                                                                    date: item.date,
+                                                                    orders: item.orders,
+                                                                    amount: item.amount
+                                                                }
+                                                            })
                                                             }
-                                                        })
-                                                        }
                                                         >
                                                             <Text style={{ color: '#3f51b5' }}>View</Text>
                                                         </Button>
@@ -195,7 +196,7 @@ class History extends Component {
                     </Content>
 
 
-                   <Footer navigate={this.props.navigation.navigate}/>
+                    <Footer navigate={this.props.navigation.navigate} />
                 </Container>
             </>
         )

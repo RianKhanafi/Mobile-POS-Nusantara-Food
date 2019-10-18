@@ -5,7 +5,7 @@ import {
 } from 'native-base';
 import axios from 'axios'
 import { StyleSheet,AsyncStorage } from 'react-native';
-const URL = 'http://192.168.1.14:5000/api'
+const URL = 'http://192.168.1.5:5000'
 class Login extends Component {
     constructor(props) {
         super(props)
@@ -21,7 +21,7 @@ class Login extends Component {
         password:this.state.password
     }
     
-        await axios.post(`${URL}/registration/login`, data)
+        await axios.post(`${URL}/api/registration/login`, data)
             .then(res => {
                 AsyncStorage.setItem('token', res.data.token);
                 AsyncStorage.setItem('username', res.data.name)

@@ -1,4 +1,4 @@
-import { createAppContainer, withNavigation  } from 'react-navigation'
+import { createAppContainer, withNavigation } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 
 // Screen
@@ -8,7 +8,7 @@ import Signup from './Screens/Signup'
 import Home from './Screens/Home'
 import History from './Screens/History'
 import Manage from './Screens/manage'
-// import DetailProduct from './Component/detailProduct'
+import DetailProduct from './Component/detailProduct'
 import Footer from './Component/footer'
 import Cart from './Component/cart'
 // import Cart from './Component/cart'
@@ -22,7 +22,7 @@ const MainNavigator = createStackNavigator({
     History,
     Footer,
     AddData,
-    // DetailProduct,
+    DetailProduct,
     Cart,
     Manage
 }, {
@@ -37,10 +37,10 @@ const MainNavigator = createStackNavigator({
 }, {
     headerMode: 'none',
     initialRouteName: 'History'
-},{
+}, {
     headerMode: 'none',
     initialRouteName: 'AddData'
-},{
+}, {
     headerMode: 'none',
     initialRouteName: 'DetailProduct'
 })

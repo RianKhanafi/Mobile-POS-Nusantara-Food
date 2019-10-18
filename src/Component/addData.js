@@ -6,7 +6,7 @@ import {
 } from 'native-base'
 import axios from 'axios'
 import ImagePicker from 'react-native-image-picker'
-const URL = 'http://192.168.1.14:5000/api'
+const URL = 'http://192.168.1.5:5000'
 class AddData extends Component {
     constructor(props) {
         super(props)
@@ -32,7 +32,7 @@ class AddData extends Component {
             updated:this.state.updated,
             id_category:this.state.id_category
         }
-        await axios.post(`${URL}/products`, data)
+        await axios.post(`${URL}/api/products`, data)
         .then(result => {
             // console.log(result)
             this.setState({

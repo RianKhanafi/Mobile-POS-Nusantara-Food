@@ -6,6 +6,7 @@ import {
     Container, Header, Text, View, Footer, FooterTab, Icon, Badge, Button, Content,
     Grid, Col, Input, Item, Card, CardItem, Left, Thumbnail, Body, Right, Root, ActionSheet
 } from 'native-base';
+const URL = 'http://192.168.1.5:5000'
 class cardList extends Component {
 
     render() {
@@ -18,7 +19,7 @@ class cardList extends Component {
                             <CardItem style={{ padding: 0 }}>
                                 <Grid style={{ flexDirection: "row", flex: 1 }}>
                                     <Col size={2}>
-                                        <Image source={{ uri: `http://192.168.1.14:5000/images/${item.image}` }} style={{ width: 50, height: 50, resizeMode: 'cover', borderRadius: 15 }} />
+                                        <Image source={{ uri: `${URL}/images/${item.image}` }} style={{ width: 50, height: 50, resizeMode: 'cover', borderRadius: 15 }} />
                                     </Col>
                                     <Col size={4}>
                                     <TouchableOpacity   style={{backgroundColor:'transparant'}}  
