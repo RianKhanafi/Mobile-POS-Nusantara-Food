@@ -1,4 +1,47 @@
 # Mobile-POS-Nusantara-Food
+> Nusantara Food is a point of sale Application
+
+## Requirement
+- React Native
+- native-base
+- react-navigation
+- react-native-pure-chart
+- react-native-image-picker
+- Axios
+
+## Features
+- [x] Login user
+- [x] Log out
+- [x] Home screen
+  - Chart
+  - Search
+- [x] Add menu
+- [x] Update menu
+- [x] Delete menu
+- [x] History
+  - income and order information
+  - Chart Revenue
+  - Recent Order
+## Instalation
+  Clone
+  ```
+  $ git clone https://github.com/RianKhanafi/Mobile-POS-Nusantara-Food.git
+  $ cd nusantara_food
+  ```
+## Setup .env
+```
+  API_BASE_URL= pointofsale backend url
+```
+## Backend for Nusantara Food
+visit the link below to get a backend for the Nusantara Food food
+[Backend Point of Sale](https://github.com/RianKhanafi/restfulapi-pointofsale)
+
+## Start Nusantara Food
+```
+  $ react-native run-android
+```
+
+## Demo Screenshoot
 
 # Demo
 ![image](https://user-images.githubusercontent.com/51011550/67622697-d36c4c80-f846-11e9-9754-9c1b55d8092b.png)
