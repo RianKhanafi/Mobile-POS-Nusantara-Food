@@ -23,13 +23,19 @@
   - Chart Revenue
   - Recent Order
 ## Instalation
-  Clone
+ - Clone
   ```
   $ git clone https://github.com/RianKhanafi/Mobile-POS-Nusantara-Food.git
+  ```
+ - Instal dependencies
+  ```
+  $ yarn install / npm install
+  ```
+  ```
   $ Rename the folder to become nusantarafood
   $ cd nusantarafood
   ```
-## Setup .env
+- Setup .env
 ```
   API_BASE_URL= pointofsale backend url
 ```
