@@ -31,8 +31,12 @@
   ```
   $ yarn install / npm install
   ```
+  - Rename Folder
   ```
   $ Rename the folder to become nusantarafood
+  ```
+  - choose folder
+  ```
   $ cd nusantarafood
   ```
 - Setup .env
