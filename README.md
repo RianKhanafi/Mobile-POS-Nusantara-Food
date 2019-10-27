@@ -26,7 +26,8 @@
   Clone
   ```
   $ git clone https://github.com/RianKhanafi/Mobile-POS-Nusantara-Food.git
-  $ cd nusantara_food
+  $ Rename the folder to become nusantarafood
+  $ cd nusantarafood
   ```
 ## Setup .env
 ```
